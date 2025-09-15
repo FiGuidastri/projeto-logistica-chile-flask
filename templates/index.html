@@ -17,7 +17,7 @@
         })();
     </script>
 </head>
-<body>
+<body class="home-body">
     <div class="top-bar">
         <div class="language-selector">
             <a href="?lang=en" class="{{ 'active' if session.get('lang', 'en') == 'en' }}">English</a> | 
@@ -53,99 +53,20 @@
             {% if error %}
                 <div class="results-section error-message"><p>{{ error }}</p></div>
             {% endif %}
-            {% if logs %}
-                <div class="results-section">
-                    <h2>{{ texts.report_header }}</h2>
-                    <div class="logs">
-                        {% for log in logs %}<p class="log-item">{{ log }}</p>{% endfor %}
-                    </div>
-                    {% if success %}
-                        <div class="success-message">
-                            <p>{{ texts.success_message }}</p>
-                            <div class="action-buttons">
-                                <a href="{{ url_for('download_file') }}" class="download-btn">{{ texts.download_button_label }}</a>
-                                {% if session.get('report_data') %}
-                                <button id="viewReportBtn" class="view-report-btn">{{ texts.view_report_button_label }}</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
         </main>
     </div>
-
-    {% if session.get('report_data') %}
-    {% set report = session.get('report_data') %}
-    <div id="reportModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>{{ texts.report_title }}</h2>
-            
-            <div class="kpi-card">
-                <div class="kpi-value">{{ report.total_deliveries }}</div>
-                <div class="kpi-label">{{ texts.total_deliveries }}</div>
-            </div>
-
-            <div class="report-details">
-                <div class="report-column">
-                    <h3>{{ texts.deliveries_by_carrier }}</h3>
-                    <div class="chart-container">
-                        {% for carrier, count in report.by_carrier.items() %}
-                        <div class="chart-item">
-                            <span class="chart-label">{{ carrier }}</span>
-                            <div class="bar-wrapper">
-                                <div class="bar" style="width: {{ (count / report.max_carrier_count) * 100 }}%;">
-                                    <span class="bar-value">{{ count }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="report-column">
-                    <h3>{{ texts.deliveries_by_chain }}</h3>
-                    <div class="chart-container">
-                        {% for chain, count in report.by_chain.items() %}
-                        <div class="chart-item">
-                            <span class="chart-label">{{ chain }}</span>
-                            <div class="bar-wrapper">
-                                <div class="bar" style="width: {{ (count / report.max_chain_count) * 100 }}%;">
-                                    <span class="bar-value">{{ count }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
 
     <script>
         const themeToggle = document.getElementById('checkbox');
         const htmlElement = document.documentElement;
-
         function setTheme(isDark) {
-            if (isDark) { htmlElement.classList.add('dark-theme'); } 
-            else { htmlElement.classList.remove('dark-theme'); }
+            if (isDark) { htmlElement.classList.add('dark-theme'); } else { htmlElement.classList.remove('dark-theme'); }
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             themeToggle.checked = isDark;
         }
-
         const isDarkMode = htmlElement.classList.contains('dark-theme');
         setTheme(isDarkMode);
-
         themeToggle.addEventListener('change', function() { setTheme(this.checked); });
-
-        const modal = document.getElementById("reportModal");
-        const btn = document.getElementById("viewReportBtn");
-        const span = document.getElementsByClassName("close-btn")[0];
-
-        if (btn) { btn.onclick = function() { modal.style.display = "block"; } }
-        if (span) { span.onclick = function() { modal.style.display = "none"; } }
-        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
     </script>
 </body>
 </html>
