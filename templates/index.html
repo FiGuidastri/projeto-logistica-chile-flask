@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.title }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <script>
+        // Script para aplicar o tema escuro imediatamente no carregamento da página
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="language-selector">
+            <a href="?lang=en" class="{{ 'active' if session.get('lang', 'en') == 'en' }}">English</a> | 
+            <a href="?lang=es" class=" {{ 'active' if session.get('lang', 'en') == 'es' }}">Español</a>
+        </div>
+
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <i class="fas fa-sun theme-icon light-theme-icon"></i>
+            <i class="fas fa-moon theme-icon dark-theme-icon"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>{{ texts.title }}</h1>
+            <p>{{ texts.description }}</p>
+        </header>
+
+        <main>
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="spreadsheet">{{ texts.file_uploader_label }}</label>
+                    <input type="file" id="spreadsheet" name="spreadsheet" accept=".xlsx" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="holiday_day">{{ texts.number_input_label }}</label>
+                    <input type="number" id="holiday_day" name="holiday_day" min="1" max="31" value="20" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">{{ texts.button_label }}</button>
+            </form>
+
+            {% if error %}
+                <div class="results-section error-message">
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
+
+            {% if logs %}
+                <div class="results-section">
+                    <h2>{{ texts.report_header }}</h2>
+                    <div class="logs">
+                        {% for log in logs %}
+                            <p class="log-item">{{ log }}</p>
+                        {% endfor %}
+                    </div>
+
+                    {% if success %}
+                        <div class="success-message">
+                            <p>{{ texts.success_message }}</p>
+                            <a href="{{ url_for('download_file') }}" class="download-btn">{{ texts.download_button_label }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('checkbox');
+        const htmlElement = document.documentElement;
+
+        function setTheme(isDark) {
+            if (isDark) {
+                htmlElement.classList.add('dark-theme');
+            } else {
+                htmlElement.classList.remove('dark-theme');
+            }
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.checked = isDark;
+        }
+
+        // Sincroniza o checkbox com o estado que já foi definido no <head>
+        const isDarkMode = htmlElement.classList.contains('dark-theme');
+        setTheme(isDarkMode);
+
+        themeToggle.addEventListener('change', function() {
+            setTheme(this.checked);
+        });
+    </script>
+</body>
+</html>
