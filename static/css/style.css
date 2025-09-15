@@ -11,10 +11,9 @@
     --log-bg-color: #f9f9f9;
     --log-border-color: #eee;
     --font-family: 'Poppins', sans-serif;
-
     /* Theme Switch Specific */
     --switch-bg-light: #ccc;
-    --switch-bg-dark: #6a9ee8; /* Cor que você usou na imagem */
+    --switch-bg-dark: #6a9ee8;
     --switch-handle-color: white;
     --sun-icon-color: #fdd835;
     --moon-icon-color: #ffffff;
@@ -32,10 +31,9 @@ html.dark-theme {
     --error-color: #ff6e6e;
     --log-bg-color: #383a59;
     --log-border-color: #44475a;
-
     /* Theme Switch Specific */
     --switch-bg-light: #ccc;
-    --switch-bg-dark: #6a9ee8; /* Usando a mesma cor para o switch na imagem */
+    --switch-bg-dark: #6a9ee8;
 }
 
 body {
@@ -43,6 +41,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     display: flex;
+    flex-direction: column; /* <-- A CORREÇÃO CRÍTICA ESTÁ AQUI */
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -61,6 +60,7 @@ body {
     max-width: 600px;
     text-align: center;
     transition: background-color 0.3s, box-shadow 0.3s;
+    position: relative; 
 }
 
 header h1 {
@@ -116,7 +116,7 @@ input[type="file"]::file-selector-button:hover {
     background-color: var(--primary-hover);
 }
 
-.submit-btn, .download-btn {
+.submit-btn {
     display: inline-block;
     width: 100%;
     padding: 15px;
@@ -131,7 +131,7 @@ input[type="file"]::file-selector-button:hover {
     text-decoration: none;
 }
 
-.submit-btn:hover, .download-btn:hover {
+.submit-btn:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
 }
@@ -168,6 +168,7 @@ input[type="file"]::file-selector-button:hover {
     color: var(--text-color);
     transition: border-color 0.3s, color 0.3s;
 }
+
 .log-item:last-child {
     border-bottom: none;
 }
@@ -180,38 +181,29 @@ input[type="file"]::file-selector-button:hover {
     font-weight: 500;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
+
 .success-message {
     background-color: #e9f7ef;
     color: var(--success-color);
     border: 1px solid var(--success-color);
 }
+
 html.dark-theme .success-message {
     background-color: #2b3a32;
     color: var(--success-color);
     border-color: var(--success-color);
 }
+
 .error-message {
     background-color: #fbebed;
     color: var(--error-color);
     border: 1px solid var(--error-color);
 }
+
 html.dark-theme .error-message {
     background-color: #3a2b2b;
     color: var(--error-color);
     border-color: var(--error-color);
-}
-
-.download-btn {
-    margin-top: 15px;
-    background-color: var(--success-color);
-    width: auto;
-    padding: 12px 25px;
-}
-.download-btn:hover {
-    background-color: #218838;
-}
-html.dark-theme .download-btn:hover {
-    background-color: #45bd6b;
 }
 
 .top-bar {
@@ -220,7 +212,8 @@ html.dark-theme .download-btn:hover {
     right: 30px;
     display: flex;
     align-items: center;
-    gap: 15px; /* Ajuste o gap para o espaço entre o switch e o ícone */
+    gap: 15px;
+    z-index: 10;
 }
 
 .language-selector a {
@@ -229,28 +222,31 @@ html.dark-theme .download-btn:hover {
     font-weight: 500;
     transition: color 0.3s;
 }
+
 .language-selector a.active {
     font-weight: 600;
     text-decoration: underline;
 }
 
-/* Theme Switch Styles */
 .theme-switch-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espaço entre o switch e o ícone */
+    gap: 10px;
 }
+
 .theme-switch {
     position: relative;
     display: inline-block;
-    width: 50px; /* Largura do switch */
-    height: 26px; /* Altura do switch */
+    width: 50px;
+    height: 26px;
 }
+
 .theme-switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
+
 .slider {
     position: absolute;
     cursor: pointer;
@@ -260,12 +256,13 @@ html.dark-theme .download-btn:hover {
     bottom: 0;
     background-color: var(--switch-bg-light);
     transition: .4s;
-    border-radius: 26px; /* Cantos arredondados */
+    border-radius: 26px;
 }
+
 .slider:before {
     position: absolute;
     content: "";
-    height: 20px; /* Tamanho do "botão" do switch */
+    height: 20px;
     width: 20px;
     left: 3px;
     bottom: 3px;
@@ -273,63 +270,254 @@ html.dark-theme .download-btn:hover {
     transition: .4s;
     border-radius: 50%;
 }
-input:checked + .slider {
+
+input:checked+.slider {
     background-color: var(--switch-bg-dark);
 }
-input:focus + .slider {
+
+input:focus+.slider {
     box-shadow: 0 0 1px var(--primary-color);
 }
-input:checked + .slider:before {
-    transform: translateX(24px); /* Move o botão para a direita */
+
+input:checked+.slider:before {
+    transform: translateX(24px);
 }
 
-/* --- ESTILO DOS ÍCONES AO LADO DO SWITCH --- */
 .theme-icon {
-    font-size: 1.2rem; /* Tamanho do ícone */
-    color: var(--primary-color); /* Usar a cor primária para o ícone */
+    font-size: 1.2rem;
+    color: var(--primary-color);
     transition: opacity 0.3s, color 0.3s;
 }
 
-/* Esconde o sol e mostra a lua no tema escuro */
 html.dark-theme .light-theme-icon {
     display: none;
-    opacity: 0;
 }
 html.dark-theme .dark-theme-icon {
     display: block;
-    opacity: 1;
 }
-
-/* Esconde a lua e mostra o sol no tema claro (estado padrão) */
 .light-theme-icon {
     display: block;
-    opacity: 1;
 }
 .dark-theme-icon {
     display: none;
-    opacity: 0;
 }
 
-
-/* Responsive Design */
 @media (max-width: 640px) {
+    body {
+        justify-content: flex-start;
+        padding-top: 20px;
+    }
+    .top-bar {
+        position: relative;
+        flex-direction: column-reverse;
+        gap: 15px;
+        margin-bottom: 20px;
+        align-items: center;
+        top: auto;
+        right: auto;
+    }
     .container {
         padding: 20px;
     }
     header h1 {
         font-size: 1.5rem;
     }
-    .top-bar {
-        position: static;
-        flex-direction: column-reverse;
-        gap: 15px;
-        margin-bottom: 20px;
-        align-items: center;
-    }
     .theme-switch-wrapper {
-        flex-direction: row; /* Volta a ser row para mobile */
+        flex-direction: row;
         justify-content: center;
         width: 100%;
         gap: 10px;
+    }
+}
+
+
+/* --- Estilos dos Botões de Ação --- */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.download-btn, .view-report-btn {
+    width: auto;
+    padding: 12px 25px;
+    flex-grow: 1;
+}
+
+.download-btn {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: var(--font-family);
+    text-decoration: none;
+}
+.download-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+html.dark-theme .download-btn:hover {
+    background-color: #45bd6b;
+}
+
+.view-report-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: var(--font-family);
+}
+
+.view-report-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+
+/* --- Estilos do Modal de Relatório --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--container-bg);
+    margin: 5% auto;
+    padding: 30px 40px;
+    border: 1px solid var(--border-color);
+    width: 90%;
+    max-width: 900px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.95);}
+    to {opacity: 1; transform: scale(1);}
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: var(--text-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.kpi-value {
+    font-size: 3rem;
+    font-weight: 600;
+}
+.kpi-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.report-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.report-column h3 {
+    text-align: left;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.1rem;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chart-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.chart-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.bar-wrapper {
+    width: 100%;
+    background-color: var(--log-bg-color);
+    border-radius: 5px;
+    height: 30px;
+}
+
+.bar {
+    background-color: var(--primary-color);
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.8s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.bar-value {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .report-details {
+        grid-template-columns: 1fr;
     }
 }
